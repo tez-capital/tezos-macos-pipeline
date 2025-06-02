@@ -5,7 +5,6 @@ on:
 
 env:
   TEZOS_VERSION: octez-v22.0
-  RUST_VERSION: "1.77.2"
 
 jobs:
   setup-and-clone:
@@ -23,6 +22,7 @@ jobs:
         uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: 5.2.1
+          cache-prefix: aaaaa
 
       - name: Build dependencies
         run: |
@@ -44,7 +44,7 @@ jobs:
           brew uninstall rust || true
           wget https://sh.rustup.rs/rustup-init.sh
           chmod +x rustup-init.sh
-          ./rustup-init.sh --profile minimal --default-toolchain $RUST_VERSION -y
+          ./rustup-init.sh --profile minimal --default-toolchain $rust_version -y
           . $HOME/.cargo/env
           eval $(opam env)
 
