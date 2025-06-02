@@ -109,9 +109,8 @@ jobs:
 
           # tezos
           echo "Building Tezos with OCaml version: $ocaml_version"
-          # eval $(opam env)
-          opam config remove criteria
-
+          eval $(opam env)
+          
           make build-deps
           eval $(opam env)
           make octez-layer1
