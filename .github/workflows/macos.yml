@@ -63,11 +63,11 @@ jobs:
           # make
           # cd ../..
 
-          # # base
-          # wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
-          # tar xzf v0.16.3.tar.gz
-          # sed -i.bak '/(:include mpopcnt\.sexp)/d' base-0.16.3/src/dune
-          # opam pin add -y base.v0.16.3 ./base-0.16.3
+          # base
+          wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
+          tar xzf v0.16.3.tar.gz
+          sed -i.bak '/(:include mpopcnt\.sexp)/d' base-0.16.3/src/dune
+          opam pin add -y base.v0.16.3 ./base-0.16.3
 
 
           # # findlib
