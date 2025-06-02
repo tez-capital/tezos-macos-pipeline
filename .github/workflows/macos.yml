@@ -115,8 +115,8 @@ jobs:
           echo "Building Tezos with OCaml version: $ocaml_version"
           eval $(opam env)
           
-          opam install . --criteria="-removed,-count[version-lag:version-lag,solution]"
-          eval $(opam env)
+          # opam install . --criteria="-removed,-count[version-lag:version-lag,solution]"
+          # eval $(opam env)
           
           make build-deps
           eval $(opam env)
