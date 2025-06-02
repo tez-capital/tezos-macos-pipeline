@@ -16,7 +16,12 @@ jobs:
       - name: Install Homebrew dependencies
         run: |
           brew update
-          brew install opam ocaml dune git wget
+          brew install git wget
+
+      - name: Set-up OCaml
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: 5
 
       - name: Build dependencies
         run: |
