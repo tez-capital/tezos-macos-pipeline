@@ -38,14 +38,15 @@ jobs:
           source latest-release:version.sh
           opam switch create for_tezos $ocaml_version
           eval $(opam env)
+          opam install -y opam-depext
+          opam depext -y conf-rust-2021
+          opam install -y conf-rust-2021
+          
           wget https://sh.rustup.rs/rustup-init.sh
           chmod +x rustup-init.sh
           ./rustup-init.sh --profile minimal --default-toolchain $RUST_VERSION -y
           . $HOME/.cargo/env
           eval $(opam env)
-          opam install -y opam-depext
-          opam depext -y conf-rust-2021
-          opam install -y conf-rust-2021
           
           # zstd
           git clone https://github.com/facebook/zstd.git
