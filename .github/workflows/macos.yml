@@ -71,15 +71,15 @@ jobs:
           opam pin add -y base.v0.16.3 ./base-0.16.3
 
 
-          # # findlib
-          # wget https://github.com/ocaml/ocamlfind/archive/refs/tags/findlib-1.9.6.tar.gz
-          # tar xzf findlib-1.9.6.tar.gz
-          # cd ocamlfind-findlib-1.9.6
-          # ./configure
-          # make
-          # make all
-          # cd ..
-          # opam pin add -y ocamlfind ./ocamlfind-findlib-1.9.6
+          # findlib
+          wget https://github.com/ocaml/ocamlfind/archive/refs/tags/findlib-1.9.6.tar.gz
+          tar xzf findlib-1.9.6.tar.gz
+          cd ocamlfind-findlib-1.9.6
+          ./configure
+          make
+          make all
+          cd ..
+          opam pin add -y ocamlfind ./ocamlfind-findlib-1.9.6
 
           # # patch flags and remove dynlib
           # mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
