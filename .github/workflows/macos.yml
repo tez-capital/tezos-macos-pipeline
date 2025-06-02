@@ -110,9 +110,12 @@ jobs:
           #   -ccopt -Wl,-why_load
           #   -ccopt \"-framework Security\")' || echo '()'"))))
           # EOF
-
+          
           # tezos
           echo "Building Tezos with OCaml version: $ocaml_version"
+          eval $(opam env)
+          
+          opam install . --criteria="-removed,-count[version-lag:version-lag,solution]"
           eval $(opam env)
           
           make build-deps
