@@ -116,6 +116,8 @@ jobs:
           EOF
           
           # tezos
+          opam pin add conf-rust-2021 -k version 1 --yes
+          opam option depext=false
           echo "Building Tezos with OCaml version: $ocaml_version"
           brew link postgresql@15
           eval $(opam env)
