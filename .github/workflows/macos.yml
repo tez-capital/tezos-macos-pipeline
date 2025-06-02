@@ -14,12 +14,6 @@ jobs:
       - name: Checkout current repo
         uses: actions/checkout@v4
 
-      - name: Install Homebrew dependencies
-        run: |
-          brew update
-          brew install git wget
-          brew uninstall rust
-
       - name: Set-up OCaml
         uses: ocaml/setup-ocaml@v3
         with:
@@ -43,6 +37,7 @@ jobs:
           opam depext -y conf-rust-2021
           opam install -y conf-rust-2021
           
+          brew uninstall rust
           wget https://sh.rustup.rs/rustup-init.sh
           chmod +x rustup-init.sh
           ./rustup-init.sh --profile minimal --default-toolchain $RUST_VERSION -y
