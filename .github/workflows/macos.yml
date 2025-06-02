@@ -27,7 +27,7 @@ jobs:
           git reset --hard $TEZOS_VERSION
 
           # init
-          opam init --bare -a
+          opam init --bare -a --disable-sandboxing --criteria="-removed,-count[version-lag:latest],-changed"
           eval $(opam env)
           wget -O latest-release:version.sh https://gitlab.com/tezos/tezos/raw/latest-release/scripts/version.sh
           source latest-release:version.sh
