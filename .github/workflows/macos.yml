@@ -3,6 +3,9 @@ name: Setup OCaml on macOS M1
 on:
   push:
 
+env:
+  TEZOS_VERSION: octez-v22.0
+
 jobs:
   setup-and-clone:
     runs-on: macos-14  # or use macos-13 if 14 is not available/stable
@@ -19,6 +22,7 @@ jobs:
         run: |
           git clone https://gitlab.com/tezos/tezos.git 
           cd tezos
+          git reset --hard $TEZOS_VERSION
 
           # init
           opam init --bare -a
