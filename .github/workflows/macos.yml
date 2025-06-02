@@ -17,7 +17,8 @@ jobs:
 
       - name: Build dependencies
         run: |
-          git clone https://gitlab.com/tezos/tezos.git .
+          git clone https://gitlab.com/tezos/tezos.git 
+          cd tezos
 
           # init
           opam init --bare -a
