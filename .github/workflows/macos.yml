@@ -101,6 +101,10 @@ jobs:
           EOF
 
           # tezos
+          eval $(opam env)
+          opam update tezos
+          eval $(opam env)
+
           make build-deps
           make octez-layer1
 
