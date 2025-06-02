@@ -5,6 +5,7 @@ on:
 
 env:
   TEZOS_VERSION: octez-v22.0
+  RUST_VERSION: 1.77.2
 
 jobs:
   setup-and-clone:
@@ -39,7 +40,7 @@ jobs:
           eval $(opam env)
           wget https://sh.rustup.rs/rustup-init.sh
           chmod +x rustup-init.sh
-          ./rustup-init.sh --profile minimal --default-toolchain 1.86.0 -y
+          ./rustup-init.sh --profile minimal --default-toolchain $RUST_VERSION -y
           . $HOME/.cargo/env
           eval $(opam env)
           opam install -y opam-depext
