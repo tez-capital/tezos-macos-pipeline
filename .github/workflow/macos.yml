@@ -1,0 +1,102 @@
+name: Setup OCaml on macOS M1
+
+on:
+  push:
+
+jobs:
+  setup-and-clone:
+    runs-on: macos-14  # or use macos-13 if 14 is not available/stable
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+
+      - name: Install Homebrew dependencies
+        run: |
+          brew update
+          brew install opam ocaml dune git wget
+
+      - name: Build dependencies
+        run: |
+          git clone https://gitlab.com/tezos/tezos.git .
+
+          # init
+          opam init --bare -a
+          eval $(opam env)
+          wget -O latest-release:version.sh https://gitlab.com/tezos/tezos/raw/latest-release/scripts/version.sh
+          source latest-release:version.sh
+          opam switch create for_tezos $ocaml_version
+          eval $(opam env)
+          wget https://sh.rustup.rs/rustup-init.sh
+          chmod +x rustup-init.sh
+          ./rustup-init.sh --profile minimal --default-toolchain 1.86.0 -y
+          . $HOME/.cargo/env
+          eval $(opam env)
+
+          # zstd
+          git clone https://github.com/facebook/zstd.git
+          cd zstd/build/cmake
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
+          make build
+          make install
+          cd ../../..
+
+          # hidapi
+          git clone https://github.com/libusb/hidapi.git
+          cd hidapi
+          mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../hidapi-static
+          make
+          cd ../..
+
+          # base
+          wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
+          tar xzf v0.16.3.tar.gz
+          sed -i.bak '/(:include mpopcnt\.sexp)/d' base-0.16.3/src/dune
+          opam pin add base.v0.16.3 ./base-0.16.3
+
+
+          # findlib
+          wget https://github.com/ocaml/ocamlfind/archive/refs/tags/findlib-1.9.6.tar.gz
+          tar xzf findlib-1.9.6.tar.gz
+          cd ocamlfind-findlib-1.9.6
+          ./configure
+          make
+          make all
+          cd ..
+          opam pin add ocamlfind ./ocamlfind-findlib-1.9.6
+
+          # patch flags and remove dynlib
+          mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
+          mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
+          mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
+          mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
+
+          sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
+          r /dev/stdin
+          d
+          }' dune <<'EOF'
+              "[ '%{system}' = 'macosx' ] && echo '(
+            -ccopt -I/opt/homebrew/opt/openssl@3/include
+            -ccopt -L/opt/homebrew/opt/openssl@3/lib
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
+
+            -ccopt -I/opt/homebrew/opt/gmp/include
+            -ccopt -L/opt/homebrew/opt/gmp/lib
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
+
+            -ccopt -I/Users/berry/tezos/zstd-local/include
+            -ccopt -L/Users/berry/tezos/zstd-local/lib
+            -ccopt -Wl,-force_load,/Users/berry/tezos/zstd-local/lib/libzstd.a
+
+            -ccopt -Wl,-search_paths_first
+            -ccopt -Wl,-no_compact_unwind
+            -ccopt -Wl,-why_load
+            -ccopt \"-framework Security\")' || echo '()'"))))
+          EOF
+
+          # tezos
+          make build-deps
+          make octez-layer1
+
