@@ -16,14 +16,14 @@ jobs:
       - name: Install Homebrew dependencies
         run: |
           brew update
-          brew install curl wget
+          brew install curl wget ocaml dune opam
 
-      - name: Set-up OCaml
-        uses: ocaml/setup-ocaml@v3
-        with:
-          ocaml-compiler: 5.2.1
-          cache-prefix: aaaaa
-          opam-pin: false
+      # - name: Set-up OCaml
+      #   uses: ocaml/setup-ocaml@v3
+      #   with:
+      #     ocaml-compiler: 5.2.1
+      #     cache-prefix: aaaaa
+      #     opam-pin: false
 
       - name: Build dependencies
         run: |
