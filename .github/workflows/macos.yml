@@ -9,7 +9,7 @@ env:
 
 jobs:
   setup-and-clone:
-    runs-on: macos-14  # or use macos-13 if 14 is not available/stable
+    runs-on: macos-15  # or use macos-13 if 14 is not available/stable
     steps:
       - name: Checkout current repo
         uses: actions/checkout@v4
