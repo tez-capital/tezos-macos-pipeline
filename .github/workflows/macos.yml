@@ -16,7 +16,7 @@ jobs:
       - name: Install Homebrew dependencies
         run: |
           brew update
-          brew install curl wget ocaml dune opam
+          brew install curl wget ocaml dune opam postgresql@15
 
       # - name: Set-up OCaml
       #   uses: ocaml/setup-ocaml@v3
@@ -27,6 +27,7 @@ jobs:
 
       - name: Build dependencies
         run: |
+          export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
           git clone https://gitlab.com/tezos/tezos.git 
           cd tezos
           git reset --hard $TEZOS_VERSION
@@ -49,20 +50,20 @@ jobs:
           . $HOME/.cargo/env
           eval $(opam env)
 
-          # # zstd
-          # git clone https://github.com/facebook/zstd.git
-          # cd zstd/build/cmake
-          # cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
-          # make install
-          # cd ../../..
+          # zstd
+          git clone https://github.com/facebook/zstd.git
+          cd zstd/build/cmake
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
+          make install
+          cd ../../..
 
-          # # hidapi
-          # git clone https://github.com/libusb/hidapi.git
-          # cd hidapi
-          # mkdir build && cd build
-          # cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../hidapi-static
-          # make
-          # cd ../..
+          # hidapi
+          git clone https://github.com/libusb/hidapi.git
+          cd hidapi
+          mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../hidapi-static
+          make
+          cd ../..
 
           # base
           wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
@@ -82,38 +83,39 @@ jobs:
           opam pin add -y ocamlfind ./ocamlfind-findlib-1.9.6
 
           # # patch flags and remove dynlib
-          # mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
-          # mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
-          # mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
-          # mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
+          mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
+          mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
+          mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
+          mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
 
-          # sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
-          # r /dev/stdin
-          # d
-          # }' dune <<'EOF'
-          #     "[ '%{system}' = 'macosx' ] && echo '(
-          #   -ccopt -I/opt/homebrew/opt/openssl@3/include
-          #   -ccopt -L/opt/homebrew/opt/openssl@3/lib
-          #   -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
-          #   -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
+          sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
+          r /dev/stdin
+          d
+          }' dune <<'EOF'
+              "[ '%{system}' = 'macosx' ] && echo '(
+            -ccopt -I/opt/homebrew/opt/openssl@3/include
+            -ccopt -L/opt/homebrew/opt/openssl@3/lib
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
 
-          #   -ccopt -I/opt/homebrew/opt/gmp/include
-          #   -ccopt -L/opt/homebrew/opt/gmp/lib
-          #   -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
-          #   -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
+            -ccopt -I/opt/homebrew/opt/gmp/include
+            -ccopt -L/opt/homebrew/opt/gmp/lib
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
 
-          #   -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
-          #   -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
-          #   -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/std-local/lib/libzstd.a
+            -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
+            -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
+            -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/std-local/lib/libzstd.a
 
-          #   -ccopt -Wl,-search_paths_first
-          #   -ccopt -Wl,-no_compact_unwind
-          #   -ccopt -Wl,-why_load
-          #   -ccopt \"-framework Security\")' || echo '()'"))))
-          # EOF
+            -ccopt -Wl,-search_paths_first
+            -ccopt -Wl,-no_compact_unwind
+            -ccopt -Wl,-why_load
+            -ccopt \"-framework Security\")' || echo '()'"))))
+          EOF
           
           # tezos
           echo "Building Tezos with OCaml version: $ocaml_version"
+          brew link postgresql@15
           eval $(opam env)
           
           # opam install . --criteria="-removed,-count[version-lag:version-lag,solution]"
