@@ -101,8 +101,9 @@ jobs:
           EOF
 
           # tezos
-          eval $(opam env)
-          opam update tezos
+          echo "Building Tezos with OCaml version: $ocaml_version"
+          # eval $(opam env)
+          # opam update tezos
           eval $(opam env)
 
           make build-deps
