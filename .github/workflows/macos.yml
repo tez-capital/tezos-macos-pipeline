@@ -41,7 +41,6 @@ jobs:
           git clone https://github.com/facebook/zstd.git
           cd zstd/build/cmake
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
-          make build
           make install
           cd ../../..
 
@@ -91,9 +90,9 @@ jobs:
             -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
             -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
 
-            -ccopt -I/Users/berry/tezos/zstd-local/include
-            -ccopt -L/Users/berry/tezos/zstd-local/lib
-            -ccopt -Wl,-force_load,/Users/berry/tezos/zstd-local/lib/libzstd.a
+            -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
+            -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
+            -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/std-local/lib/libzstd.a
 
             -ccopt -Wl,-search_paths_first
             -ccopt -Wl,-no_compact_unwind
