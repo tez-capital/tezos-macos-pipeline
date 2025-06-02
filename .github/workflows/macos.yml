@@ -35,6 +35,7 @@ jobs:
 
           # init
           opam init --bare -a --disable-sandboxing
+          opam option depext=false
           eval $(opam env)
           wget -O latest-release:version.sh https://gitlab.com/tezos/tezos/raw/latest-release/scripts/version.sh
           source latest-release:version.sh
