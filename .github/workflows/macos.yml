@@ -23,6 +23,7 @@ jobs:
         with:
           ocaml-compiler: 5.2.1
           cache-prefix: aaaaa
+          opam-pin: false
 
       - name: Build dependencies
         run: |
