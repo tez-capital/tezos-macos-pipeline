@@ -20,6 +20,7 @@ jobs:
 
       - name: Build dependencies
         run: |
+          export OPAMFETCHER=curl
           git clone https://gitlab.com/tezos/tezos.git 
           cd tezos
           git reset --hard $TEZOS_VERSION
