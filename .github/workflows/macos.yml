@@ -36,6 +36,8 @@ jobs:
           ./rustup-init.sh --profile minimal --default-toolchain 1.86.0 -y
           . $HOME/.cargo/env
           eval $(opam env)
+          opam install -y opam-depext
+          opam depext -y conf-rust-2021
           opam install -y conf-rust-2021
           
           # zstd
