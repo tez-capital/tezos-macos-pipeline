@@ -36,7 +36,8 @@ jobs:
           ./rustup-init.sh --profile minimal --default-toolchain 1.86.0 -y
           . $HOME/.cargo/env
           eval $(opam env)
-
+          opam install -y conf-rust-2021
+          
           # zstd
           git clone https://github.com/facebook/zstd.git
           cd zstd/build/cmake
@@ -103,9 +104,10 @@ jobs:
           # tezos
           echo "Building Tezos with OCaml version: $ocaml_version"
           # eval $(opam env)
-          # opam update tezos
+          opam update
           eval $(opam env)
 
           make build-deps
+          eval $(opam env)
           make octez-layer1
 
