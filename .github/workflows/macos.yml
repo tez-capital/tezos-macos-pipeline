@@ -42,7 +42,7 @@ jobs:
           # opam depext -y conf-rust-2021
           # opam install -y conf-rust-2021
           
-          brew uninstall rust
+          brew uninstall rust || true
           wget https://sh.rustup.rs/rustup-init.sh
           chmod +x rustup-init.sh
           ./rustup-init.sh --profile minimal --default-toolchain $RUST_VERSION -y
