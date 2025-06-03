@@ -115,7 +115,7 @@ jobs:
 
           make build-deps
           rm -rf base-0.16.3
-          make
+          make octez-layer1
           exit 0
           
           # # patch flags and remove dynlib
