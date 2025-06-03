@@ -108,6 +108,7 @@ jobs:
             -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
             -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
             -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a
+            -ccopt -L/opt/homebrew/opt/zstd/lib
 
             -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/include
             -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/lib
