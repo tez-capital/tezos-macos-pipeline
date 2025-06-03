@@ -75,8 +75,6 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
           make install
           cd ../../..
-          export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
-          pkg-config --static --libs libzstd
 
           # hidapi
           git clone https://github.com/libusb/hidapi.git
