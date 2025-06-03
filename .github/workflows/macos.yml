@@ -81,6 +81,7 @@ jobs:
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../hidapi-static
           make
+          make install
           cd ../..
 
           mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
@@ -107,9 +108,15 @@ jobs:
             -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
             -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a
 
+
+
             -ccopt -Wl,-search_paths_first
             -ccopt -Wl,-no_compact_unwind
-            -ccopt \"-framework Security\")' || echo '()'"))))
+            -ccopt -Wl,-no_weak_imports
+            -ccopt \"-framework Security\"
+            -ccopt \"-framework IOKit\"
+            -ccopt \"-framework CoreFoundation\"
+            )' || echo '()'"))))
           EOF
 
           make build-deps
