@@ -109,7 +109,6 @@ jobs:
 
             -ccopt -Wl,-search_paths_first
             -ccopt -Wl,-no_compact_unwind
-            -ccopt -Wl,-why_load
             -ccopt \"-framework Security\")' || echo '()'"))))
           EOF
 
