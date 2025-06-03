@@ -136,7 +136,9 @@ jobs:
           # opam install . --criteria="-removed,-count[version-lag:version-lag,solution]"
           # eval $(opam env)
           
-          make build-deps
+            for i in {1..5}; do
+            make build-deps && break || sleep 10
+            done
           eval $(opam env)
           make octez-layer1
 
