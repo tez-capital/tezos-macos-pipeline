@@ -17,7 +17,7 @@ jobs:
       - name: Install Homebrew dependencies
         run: |
           brew update
-          brew install curl wget ocaml dune opam postgresql@15
+          brew install curl wget rsync ocaml dune opam postgresql@15
 
       # - name: Set-up OCaml
       #   uses: ocaml/setup-ocaml@v3
@@ -28,7 +28,7 @@ jobs:
 
       - name: Build dependencies
         run: |
-          export OPAMFETCHER=curl
+          #export OPAMFETCHER=curl
           export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
           echo "user = \"${GITHUB_ACTOR:-github-actions}:${GITHUB_TOKEN}\"" >> ~/.curlrc
 
