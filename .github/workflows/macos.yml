@@ -119,13 +119,16 @@ jobs:
           EOF
           
           # tezos
-          opam remove conf-rust-2021 --yes || true
-          opam pin remove conf-rust-2021 --yes || true
-          rm -rf ~/.opam/download-cache/conf-rust-2021* || true
+          # opam remove conf-rust-2021 --yes || true
+          # opam pin remove conf-rust-2021 --yes || true
+          # rm -rf ~/.opam/download-cache/conf-rust-2021* || true
 
-          opam pin add conf-rust-2021 -k version 1 --yes
-          opam pin add conf-rust -k version 0.1 --yes
-          opam option depext=false
+          # opam pin add conf-rust-2021 -k version 1 --yes
+          # opam pin add conf-rust -k version 0.1 --yes
+          # opam option depext=false
+
+          sed -i.bak '/OPAMASSUMEDEPEXTS=true opam install conf-rust conf-rust-2021/d' scripts/install_build_deps.sh
+
           echo "Building Tezos with OCaml version: $ocaml_version"
           brew link postgresql@15
           eval $(opam env)
