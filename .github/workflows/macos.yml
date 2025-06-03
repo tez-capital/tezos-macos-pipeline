@@ -48,9 +48,9 @@ jobs:
           eval $(opam env)
           # rm -rf /workspace/_build /workspace/_opam
           eval $(opam env)
+          opam switch create for_tezos $ocaml_version 
           mkdir -p /Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/_opam/lib/ocaml/site-lib 
           mkdir -p /Users/runner/.opam/for_tezos/lib/ocaml/site-lib
-          opam switch create for_tezos $ocaml_version 
           eval $(opam env)
           brew link postgresql@15
           eval $(opam env)
