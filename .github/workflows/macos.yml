@@ -68,14 +68,6 @@ jobs:
           opam pin add -y ocamlfind.1.9.6 ./ocamlfind-findlib-1.9.6
           eval $(opam env)
           
-          make build-deps
-          exit 0
-          
-
-          eval $(opam env)
-          # opam install . --deps-only --with-test
-          eval $(opam env)
-
           # zstd
           git clone https://github.com/facebook/zstd.git
           cd zstd/build/cmake
@@ -91,10 +83,9 @@ jobs:
           make
           cd ../..
 
-          # base
+          make build-deps
+          exit 0
           
-          
-
           # # patch flags and remove dynlib
           mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
           mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
