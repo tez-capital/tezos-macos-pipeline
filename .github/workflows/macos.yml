@@ -44,9 +44,11 @@ jobs:
           . $HOME/.cargo/env
 
           # init
-          opam init --bare -a --disable-sandboxing
+          opam init --bare -a
           eval $(opam env)
           rm -rf /workspace/_build /workspace/_opam
+          eval $(opam env)
+          opam switch create for_tezos $ocaml_version 
           eval $(opam env)
           brew link postgresql@15
           eval $(opam env)
