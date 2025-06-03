@@ -38,7 +38,7 @@ jobs:
 
           # init
           opam init --bare -a --disable-sandboxing
-          opam option depext=false
+          # opam option depext=false
           eval $(opam env)
           wget -O latest-release:version.sh https://gitlab.com/tezos/tezos/raw/latest-release/scripts/version.sh
           source latest-release:version.sh
@@ -53,6 +53,8 @@ jobs:
           chmod +x rustup-init.sh
           ./rustup-init.sh --profile minimal --default-toolchain $rust_version -y
           . $HOME/.cargo/env
+          eval $(opam env)
+          opam install . --deps-only --with-test
           eval $(opam env)
 
           # zstd
