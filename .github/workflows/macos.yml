@@ -62,7 +62,7 @@ jobs:
           make
           make all
           cd ..
-          opam pin add -y ocamlfind ./ocamlfind-findlib-1.9.6
+          opam pin add -y ocamlfind.1.9.6 ./ocamlfind-findlib-1.9.6
 
           make build-deps
           exit 0
