@@ -48,6 +48,8 @@ jobs:
           eval $(opam env)
           rm -rf /workspace/_build /workspace/_opam
           eval $(opam env)
+          brew link postgresql@15
+          eval $(opam env)
           make build-deps
           exit 0
           
