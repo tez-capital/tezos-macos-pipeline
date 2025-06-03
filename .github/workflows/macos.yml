@@ -72,7 +72,7 @@ jobs:
           # zstd
           git clone https://github.com/facebook/zstd.git
           cd zstd/build/cmake
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
           make install
           cd ../../..
           export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
@@ -109,7 +109,6 @@ jobs:
             -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
             -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
             -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a
-            -ccopt -L/opt/homebrew/opt/zstd/lib
 
             -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/include
             -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/lib
