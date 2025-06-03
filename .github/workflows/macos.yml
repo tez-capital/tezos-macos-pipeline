@@ -83,7 +83,38 @@ jobs:
           make
           cd ../..
 
+          mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
+          mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
+          mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
+          mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
+
+          sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
+          r /dev/stdin
+          d
+          }' dune <<'EOF'
+              "[ '%{system}' = 'macosx' ] && echo '(
+            -ccopt -I/opt/homebrew/opt/openssl@3/include
+            -ccopt -L/opt/homebrew/opt/openssl@3/lib
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
+
+            -ccopt -I/opt/homebrew/opt/gmp/include
+            -ccopt -L/opt/homebrew/opt/gmp/lib
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
+            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
+
+            -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
+            -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
+            -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/std-local/lib/libzstd.a
+
+            -ccopt -Wl,-search_paths_first
+            -ccopt -Wl,-no_compact_unwind
+            -ccopt -Wl,-why_load
+            -ccopt \"-framework Security\")' || echo '()'"))))
+          EOF
+
           make build-deps
+          make
           exit 0
           
           # # patch flags and remove dynlib
@@ -135,9 +166,23 @@ jobs:
           # opam install . --criteria="-removed,-count[version-lag:version-lag,solution]"
           # eval $(opam env)
           
-           # for i in {1..5}; do
+          # for i in {1..5}; do
             make build-deps # && break || sleep 10
           #  done
           eval $(opam env)
           make octez-layer1
 
+      - name: Set release name to date/time
+        id: set_release_name
+        run: |
+          DATE_STR=$(date '+%Y-%m-%d_%H-%M')
+          echo "RELEASE_NAME=$DATE_STR" >> $GITHUB_ENV
+          echo "RELEASE_NAME=$DATE_STR" >> $GITEA_ENV # Some Gitea runners use this
+
+      - name: Upload files to a GitHub release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.set_release_name.outputs.RELEASE_NAME }}
+          file: octez-*
+          file_glob: true
