@@ -189,7 +189,6 @@ jobs:
         run: |
           DATE_STR=$(date '+%Y-%m-%d_%H-%M')
           echo "RELEASE_NAME=$DATE_STR" >> $GITHUB_ENV
-          echo "RELEASE_NAME=$DATE_STR" >> $GITEA_ENV # Some Gitea runners use this
 
       - name: Upload files to a GitHub release
         uses: svenstaro/upload-release-action@v2
