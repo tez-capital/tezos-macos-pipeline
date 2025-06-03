@@ -49,8 +49,6 @@ jobs:
           # rm -rf /workspace/_build /workspace/_opam
           eval $(opam env)
           opam switch create for_tezos $ocaml_version 
-          mkdir -p /Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/_opam/lib/ocaml/site-lib 
-          mkdir -p /Users/runner/.opam/for_tezos/lib/ocaml/site-lib
           eval $(opam env)
           brew link postgresql@15
           eval $(opam env)
@@ -67,12 +65,6 @@ jobs:
           # findlib
           wget https://github.com/ocaml/ocamlfind/archive/refs/tags/findlib-1.9.6.tar.gz
           tar xzf findlib-1.9.6.tar.gz
-          cd ocamlfind-findlib-1.9.6
-          ./configure 
-          make clean
-          make
-          make all
-          cd ..
           opam pin add -y ocamlfind.1.9.6 ./ocamlfind-findlib-1.9.6
           eval $(opam env)
           
