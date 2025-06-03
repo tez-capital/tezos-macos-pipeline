@@ -127,60 +127,6 @@ jobs:
           rm -rf base-0.16.3
           make octez-layer1
           exit 0
-          
-          # # patch flags and remove dynlib
-          mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
-          mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
-          mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
-          mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
-
-          sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
-          r /dev/stdin
-          d
-          }' dune <<'EOF'
-              "[ '%{system}' = 'macosx' ] && echo '(
-            -ccopt -I/opt/homebrew/opt/openssl@3/include
-            -ccopt -L/opt/homebrew/opt/openssl@3/lib
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
-
-            -ccopt -I/opt/homebrew/opt/gmp/include
-            -ccopt -L/opt/homebrew/opt/gmp/lib
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
-
-            -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
-            -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
-            -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a
-
-            -ccopt -Wl,-search_paths_first
-            -ccopt -Wl,-no_compact_unwind
-            -ccopt \"-framework Security\")' || echo '()'"))))
-          EOF
-          
-          # tezos
-          # opam remove conf-rust-2021 --yes || true
-          # opam pin remove conf-rust-2021 --yes || true
-          # rm -rf ~/.opam/download-cache/conf-rust-2021* || true
-
-          # opam pin add conf-rust-2021 -k version 1 --yes
-          # opam pin add conf-rust -k version 0.1 --yes
-          # opam option depext=false
-
-          sed -i.bak '/OPAMASSUMEDEPEXTS=true opam install conf-rust conf-rust-2021/d' scripts/install_build_deps.sh
-
-          echo "Building Tezos with OCaml version: $ocaml_version"
-          brew link postgresql@15
-          eval $(opam env)
-          
-          # opam install . --criteria="-removed,-count[version-lag:version-lag,solution]"
-          # eval $(opam env)
-          
-          # for i in {1..5}; do
-            make build-deps # && break || sleep 10
-          #  done
-          eval $(opam env)
-          make octez-layer1
 
       - name: Set release name to date/time
         id: set_release_name
@@ -193,5 +139,5 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.TEZOS_VERSION }}-${{ env.RELEASE_NAME }}
-          file: octez-*
+          file: tezos/octez-*
           file_glob: true
