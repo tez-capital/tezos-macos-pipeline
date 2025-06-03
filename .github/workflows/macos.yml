@@ -5,6 +5,7 @@ on:
 
 env:
   TEZOS_VERSION: octez-v22.0
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   setup-and-clone:
@@ -29,6 +30,8 @@ jobs:
         run: |
           export OPAMFETCHER=curl
           export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+          echo "user = \"${GITHUB_ACTOR:-github-actions}:${GITHUB_TOKEN}\"" >> ~/.curlrc
+
           git clone https://gitlab.com/tezos/tezos.git 
           cd tezos
           git reset --hard $TEZOS_VERSION
