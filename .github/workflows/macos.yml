@@ -127,7 +127,7 @@ jobs:
           # opam pin add conf-rust -k version 0.1 --yes
           # opam option depext=false
 
-          # sed -i.bak '/OPAMASSUMEDEPEXTS=true opam install conf-rust conf-rust-2021/d' scripts/install_build_deps.sh
+          sed -i.bak '/OPAMASSUMEDEPEXTS=true opam install conf-rust conf-rust-2021/d' scripts/install_build_deps.sh
 
           echo "Building Tezos with OCaml version: $ocaml_version"
           brew link postgresql@15
