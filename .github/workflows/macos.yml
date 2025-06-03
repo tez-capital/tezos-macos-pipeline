@@ -74,6 +74,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
           make install
           cd ../../..
+          export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
 
           # hidapi
           git clone https://github.com/libusb/hidapi.git
@@ -107,8 +108,6 @@ jobs:
             -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
             -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
             -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a
-
-
 
             -ccopt -Wl,-search_paths_first
             -ccopt -Wl,-no_compact_unwind
