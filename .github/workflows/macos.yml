@@ -122,8 +122,9 @@ jobs:
           opam remove conf-rust-2021 --yes || true
           opam pin remove conf-rust-2021 --yes || true
           rm -rf ~/.opam/download-cache/conf-rust-2021* || true
-          
+
           opam pin add conf-rust-2021 -k version 1 --yes
+          opam pin add conf-rust -k version 0.1 --yes
           opam option depext=false
           echo "Building Tezos with OCaml version: $ocaml_version"
           brew link postgresql@15
