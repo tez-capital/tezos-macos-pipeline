@@ -83,35 +83,35 @@ jobs:
           make
           cd ../..
 
-          mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
-          mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
-          mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
-          mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
+          # mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
+          # mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
+          # mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
+          # mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
 
-          sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
-          r /dev/stdin
-          d
-          }' dune <<'EOF'
-              "[ '%{system}' = 'macosx' ] && echo '(
-            -ccopt -I/opt/homebrew/opt/openssl@3/include
-            -ccopt -L/opt/homebrew/opt/openssl@3/lib
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
+          # sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
+          # r /dev/stdin
+          # d
+          # }' dune <<'EOF'
+          #     "[ '%{system}' = 'macosx' ] && echo '(
+          #   -ccopt -I/opt/homebrew/opt/openssl@3/include
+          #   -ccopt -L/opt/homebrew/opt/openssl@3/lib
+          #   -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
+          #   -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
 
-            -ccopt -I/opt/homebrew/opt/gmp/include
-            -ccopt -L/opt/homebrew/opt/gmp/lib
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
+          #   -ccopt -I/opt/homebrew/opt/gmp/include
+          #   -ccopt -L/opt/homebrew/opt/gmp/lib
+          #   -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
+          #   -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
 
-            -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
-            -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
-            -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/std-local/lib/libzstd.a
+          #   -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
+          #   -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
+          #   -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/std-local/lib/libzstd.a
 
-            -ccopt -Wl,-search_paths_first
-            -ccopt -Wl,-no_compact_unwind
-            -ccopt -Wl,-why_load
-            -ccopt \"-framework Security\")' || echo '()'"))))
-          EOF
+          #   -ccopt -Wl,-search_paths_first
+          #   -ccopt -Wl,-no_compact_unwind
+          #   -ccopt -Wl,-why_load
+          #   -ccopt \"-framework Security\")' || echo '()'"))))
+          # EOF
 
           make build-deps
           make
