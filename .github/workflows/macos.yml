@@ -51,12 +51,14 @@ jobs:
           brew link postgresql@15
           eval $(opam env)
           make build-deps || echo failed 
+          eval $(opam env)
           
           # findlib
           wget https://github.com/ocaml/ocamlfind/archive/refs/tags/findlib-1.9.6.tar.gz
           tar xzf findlib-1.9.6.tar.gz
           cd ocamlfind-findlib-1.9.6
-          ./configure
+          ./configure 
+          make clean
           make
           make all
           cd ..
