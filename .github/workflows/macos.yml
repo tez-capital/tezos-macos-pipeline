@@ -52,8 +52,8 @@ jobs:
           eval $(opam env)
           brew link postgresql@15
           eval $(opam env)
-          # make build-deps || echo failed 
-          # eval $(opam env)
+          make build-deps || echo failed 
+          eval $(opam env)
 
           # base
           wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
