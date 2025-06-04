@@ -114,6 +114,9 @@ jobs:
             )' || echo '()'"))))
           EOF
 
+          # patch Makefile to include dal node in layer1 build
+          sed -i.bak '/^OCTEZ_ONLY_LAYER1_EXECUTABLES :=/s/ octez-dal-node//' Makefile
+
           make build-deps
           rm -rf base-0.16.3
           export LDFLAGS=""
