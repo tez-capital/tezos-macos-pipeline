@@ -90,7 +90,7 @@ jobs:
           mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
           mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
           mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
-          mv /opt/homebrew/opt/zstd/lib/libzstd.1.dylib.bak /opt/homebrew/opt/zstd/lib/libzstd.1.dylib
+          mv /opt/homebrew/opt/zstd/lib/libzstd.1.dylib /opt/homebrew/opt/zstd/lib/libzstd.1.dylib.bak
 
           sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
           r /dev/stdin
