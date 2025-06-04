@@ -65,7 +65,8 @@ jobs:
           export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
           export PKG_CONFIG="pkg-config --static"
           rm -rf zstd-local/lib/*.dylib
-          LDFLAGS="-L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a"
+          export LDFLAGS="-L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a"
+          expprt CFLAGS="-I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include"
 
           # base
           wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
