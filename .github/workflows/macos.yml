@@ -72,9 +72,10 @@ jobs:
           # zstd
           git clone https://github.com/facebook/zstd.git
           cd zstd/build/cmake
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
           make install
           cd ../../..
+          export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
 
           # hidapi
           git clone https://github.com/libusb/hidapi.git
@@ -89,6 +90,7 @@ jobs:
           mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
           mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
           mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
+          mv /opt/homebrew/opt/zstd/lib/libzstd.1.dylib.bak /opt/homebrew/opt/zstd/lib/libzstd.1.dylib
 
           sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
           r /dev/stdin
@@ -108,7 +110,6 @@ jobs:
             -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
             -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
             -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a
-            -ccopt -Wl,-rpath,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
 
             -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/include
             -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/lib
