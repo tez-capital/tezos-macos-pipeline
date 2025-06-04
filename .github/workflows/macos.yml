@@ -18,6 +18,7 @@ jobs:
         run: |
           brew update
           brew install curl wget rsync ocaml dune opam postgresql@15 zstd
+          brew reinstall zstd
           brew link zstd
 
 #      - name: Set-up OCaml
@@ -67,6 +68,7 @@ jobs:
           export CFLAGS="-I/$(pwd)/zstd-local/include"
 
           ls -la $(pwd)/zstd-local/*
+          ls -la /opt/homebrew/opt/zstd/lib/libzstd.1.dylib
           make build-deps || echo failed 
           eval $(opam env)
 
