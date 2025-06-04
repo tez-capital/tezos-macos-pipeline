@@ -51,8 +51,6 @@ jobs:
           export LDFLAGS="-L/$(pwd)/zstd-local/lib -lzstd"
           export CFLAGS="-I/$(pwd)/zstd-local/include"
 
-          ls -la $(pwd)/zstd-local/*
-          ls -la /opt/homebrew/opt/zstd/lib/libzstd.1.dylib
           make build-deps || echo failed 
           eval $(opam env)
 
