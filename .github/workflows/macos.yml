@@ -62,9 +62,9 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
           make install
           cd ../../..
-          export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
-          export PKG_CONFIG="pkg-config --static"
-          rm -rf zstd-local/lib/*.dylib
+          # export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
+          # export PKG_CONFIG="pkg-config --static"
+          # rm -rf zstd-local/lib/*.dylib
           export LDFLAGS="-L/$(pwd)/zstd-local/lib -Wl,-force_load,$(pwd)/zstd-local/lib/libzstd.a"
           export CFLAGS="-I/$(pwd)/zstd-local/include"
 
