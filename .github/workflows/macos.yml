@@ -63,9 +63,9 @@ jobs:
           cd ../../..
           # export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
           # export PKG_CONFIG="pkg-config --static"
-          # rm -rf zstd-local/lib/*.dylib
-          export LDFLAGS="-L/$(pwd)/zstd-local/lib -Wl,-force_load,$(pwd)/zstd-local/lib/libzstd.a"
-          export LDFLAGS="$LDFLAGS -Wl,-rpath,$(pwd)/zstd-local/lib"
+          rm -rf zstd-local/lib/*.dylib
+          export LDFLAGS="-L/$(pwd)/zstd-local/lib -lzstd"
+          #export LDFLAGS="$LDFLAGS -Wl,-rpath,$(pwd)/zstd-local/lib"
           export CFLAGS="-I/$(pwd)/zstd-local/include"
 
           ls -la $(pwd)/zstd-local/*
