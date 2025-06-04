@@ -64,6 +64,7 @@ jobs:
           cd ../../..
           export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
           export PKG_CONFIG="pkg-config --static"
+          rm -rf zstd-local/lib/*.dylib
 
           # base
           wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
