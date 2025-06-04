@@ -53,7 +53,7 @@ jobs:
           eval $(opam env)
           brew link postgresql@15
           eval $(opam env)
-          #make build-deps || echo failed 
+          make build-deps || echo failed 
           eval $(opam env)
 
           # zstd
