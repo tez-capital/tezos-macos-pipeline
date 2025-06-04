@@ -56,6 +56,15 @@ jobs:
           make build-deps || echo failed 
           eval $(opam env)
 
+          # zstd
+          git clone https://github.com/facebook/zstd.git
+          cd zstd/build/cmake
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
+          make install
+          cd ../../..
+          export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
+          export PKG_CONFIG="pkg-config --static"
+
           # base
           wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
           tar xzf v0.16.3.tar.gz
@@ -69,14 +78,6 @@ jobs:
           opam pin add -y ocamlfind.1.9.6 ./ocamlfind-findlib-1.9.6
           eval $(opam env)
           
-          # zstd
-          git clone https://github.com/facebook/zstd.git
-          cd zstd/build/cmake
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
-          make install
-          cd ../../..
-          export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
-
           # hidapi
           git clone https://github.com/libusb/hidapi.git
           cd hidapi
