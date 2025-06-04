@@ -17,22 +17,11 @@ jobs:
       - name: Install Homebrew dependencies
         run: |
           brew update
-          brew install curl wget rsync ocaml dune opam postgresql@15 zstd
-          brew reinstall zstd
-          brew link zstd
-
-#      - name: Set-up OCaml
-#        uses: ocaml/setup-ocaml@v3
-#        with:
-#          ocaml-compiler: 5.2.1
-#          cache-prefix: aaaaa
-#          opam-pin: false
+          brew install curl wget rsync ocaml dune opam postgresql@15
 
       - name: Build dependencies
         run: |
-          #export OPAMFETCHER=curl
           export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
-          # echo "user = \"${GITHUB_ACTOR:-github-actions}:${GITHUB_TOKEN}\"" >> ~/.curlrc
 
           git clone https://gitlab.com/tezos/tezos.git 
           cd tezos
@@ -48,10 +37,7 @@ jobs:
           # init
           opam init --bare -a
           eval $(opam env)
-          # rm -rf /workspace/_build /workspace/_opam
-          eval $(opam env)
-          opam switch create for_tezos $ocaml_version 
-          eval $(opam env)
+          opam switch create for_tezos $ocaml_version    
           brew link postgresql@15
           eval $(opam env)
 
@@ -61,11 +47,8 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
           make install
           cd ../../..
-          # export PKG_CONFIG_PATH=$(pwd)/zstd-local/lib/pkgconfig
-          # export PKG_CONFIG="pkg-config --static"
           rm -rf zstd-local/lib/*.dylib
           export LDFLAGS="-L/$(pwd)/zstd-local/lib -lzstd"
-          #export LDFLAGS="$LDFLAGS -Wl,-rpath,$(pwd)/zstd-local/lib"
           export CFLAGS="-I/$(pwd)/zstd-local/include"
 
           ls -la $(pwd)/zstd-local/*
@@ -99,8 +82,7 @@ jobs:
           mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
           mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
           mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
-          # mv /opt/homebrew/opt/zstd/lib/libzstd.1.dylib /opt/homebrew/opt/zstd/lib/libzstd.1.dylib.bak
-
+          
           sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
           r /dev/stdin
           d
