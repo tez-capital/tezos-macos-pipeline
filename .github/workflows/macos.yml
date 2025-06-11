@@ -51,8 +51,8 @@ jobs:
           export LDFLAGS="-L/$(pwd)/zstd-local/lib -lzstd"
           export CFLAGS="-I/$(pwd)/zstd-local/include"
 
-          make build-deps || echo failed 
-          eval $(opam env)
+          # make build-deps || echo failed 
+          # eval $(opam env)
 
           # # base
           # wget https://github.com/janestreet/base/archive/refs/tags/v0.16.3.tar.gz
