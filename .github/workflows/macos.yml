@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  TEZOS_VERSION: octez-v22.1
+  TEZOS_VERSION: octez-v23.0-rc2
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
