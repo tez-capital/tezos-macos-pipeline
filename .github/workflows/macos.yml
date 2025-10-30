@@ -4,9 +4,14 @@ on:
   push:
   
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Tezos version tag (e.g., octez-v23.2)'
+        required: false
+        default: 'octez-v23.2'
 
 env:
-  TEZOS_VERSION: octez-v23.2
+  TEZOS_VERSION: ${{ github.event.inputs.version || 'octez-v23.2' }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
