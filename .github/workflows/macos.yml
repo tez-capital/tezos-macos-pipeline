@@ -1,4 +1,4 @@
-name: Setup OCaml on macOS M1
+name: Release Portable Tezos macOS Binaries
 
 on:
   push:
