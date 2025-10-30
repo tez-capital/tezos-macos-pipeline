@@ -26,107 +26,107 @@ jobs:
           brew update
           brew install curl wget rsync ocaml dune opam postgresql@15
 
-      - name: Build dependencies
-        run: |
-          export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+      # - name: Build dependencies
+      #   run: |
+      #     export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
-          git clone https://gitlab.com/tezos/tezos.git 
-          cd tezos
-          git reset --hard $TEZOS_VERSION
+      #     git clone https://gitlab.com/tezos/tezos.git 
+      #     cd tezos
+      #     git reset --hard $TEZOS_VERSION
 
-          source scripts/version.sh
-          brew uninstall rust || true
-          wget https://sh.rustup.rs/rustup-init.sh
-          chmod +x rustup-init.sh
-          ./rustup-init.sh --profile minimal --default-toolchain $recommended_rust_version -y
-          . $HOME/.cargo/env
+      #     source scripts/version.sh
+      #     brew uninstall rust || true
+      #     wget https://sh.rustup.rs/rustup-init.sh
+      #     chmod +x rustup-init.sh
+      #     ./rustup-init.sh --profile minimal --default-toolchain $recommended_rust_version -y
+      #     . $HOME/.cargo/env
 
-          # init
-          opam init --bare -a
-          eval $(opam env)
-          opam switch create for_tezos $ocaml_version    
-          brew link postgresql@15
-          eval $(opam env)
+      #     # init
+      #     opam init --bare -a
+      #     eval $(opam env)
+      #     opam switch create for_tezos $ocaml_version    
+      #     brew link postgresql@15
+      #     eval $(opam env)
 
-          # zstd
-          git clone https://github.com/facebook/zstd.git
-          cd zstd/build/cmake
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
-          make install
-          cd ../../..
-          rm -rf zstd-local/lib/*.dylib
-          export LDFLAGS="-L/$(pwd)/zstd-local/lib -lzstd"
-          export CFLAGS="-I/$(pwd)/zstd-local/include"
+      #     # zstd
+      #     git clone https://github.com/facebook/zstd.git
+      #     cd zstd/build/cmake
+      #     cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../../zstd-local .
+      #     make install
+      #     cd ../../..
+      #     rm -rf zstd-local/lib/*.dylib
+      #     export LDFLAGS="-L/$(pwd)/zstd-local/lib -lzstd"
+      #     export CFLAGS="-I/$(pwd)/zstd-local/include"
 
-          make build-deps || echo failed 
-          eval $(opam env)
+      #     make build-deps || echo failed 
+      #     eval $(opam env)
           
-          # hidapi
-          git clone https://github.com/libusb/hidapi.git
-          cd hidapi
-          mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../hidapi-static
-          make
-          make install
-          cd ../..
+      #     # hidapi
+      #     git clone https://github.com/libusb/hidapi.git
+      #     cd hidapi
+      #     mkdir build && cd build
+      #     cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$(pwd)/../../hidapi-static
+      #     make
+      #     make install
+      #     cd ../..
 
-          mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
-          mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
-          mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
-          mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
+      #     mv /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib /opt/homebrew/opt/openssl@3/lib/libssl.3.dylib.bak
+      #     mv /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib.bak
+      #     mv /opt/homebrew/opt/gmp/lib/libgmp.10.dylib /opt/homebrew/opt/gmp/lib/libgmp.10.dylib.bak
+      #     mv /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib /opt/homebrew/opt/gmp/lib/libgmpxx.4.dylib.bak
           
-          sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
-          r /dev/stdin
-          d
-          }' dune <<'EOF'
-              "[ '%{system}' = 'macosx' ] && echo '(
-            -ccopt -I/opt/homebrew/opt/openssl@3/include
-            -ccopt -L/opt/homebrew/opt/openssl@3/lib
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
+      #     sed -i.bak '/\[.*%{system}.*macosx.*framework Security/{
+      #     r /dev/stdin
+      #     d
+      #     }' dune <<'EOF'
+      #         "[ '%{system}' = 'macosx' ] && echo '(
+      #       -ccopt -I/opt/homebrew/opt/openssl@3/include
+      #       -ccopt -L/opt/homebrew/opt/openssl@3/lib
+      #       -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libssl.a
+      #       -ccopt -Wl,-force_load,/opt/homebrew/opt/openssl@3/lib/libcrypto.a
 
-            -ccopt -I/opt/homebrew/opt/gmp/include
-            -ccopt -L/opt/homebrew/opt/gmp/lib
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
-            -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
+      #       -ccopt -I/opt/homebrew/opt/gmp/include
+      #       -ccopt -L/opt/homebrew/opt/gmp/lib
+      #       -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmp.a
+      #       -ccopt -Wl,-force_load,/opt/homebrew/opt/gmp/lib/libgmpxx.a
 
-            -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
-            -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
-            -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a
-            -ccopt -Wl,-rpath,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
+      #       -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/include
+      #       -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
+      #       -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib/libzstd.a
+      #       -ccopt -Wl,-rpath,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/zstd-local/lib
 
-            -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/include
-            -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/lib
-            -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/lib/libhidapi.a
+      #       -ccopt -I/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/include
+      #       -ccopt -L/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/lib
+      #       -ccopt -Wl,-force_load,/Users/runner/work/tezos-macos-pipeline/tezos-macos-pipeline/tezos/hidapi-static/lib/libhidapi.a
 
-            -ccopt -Wl,-search_paths_first
-            -ccopt -Wl,-no_compact_unwind
-            -ccopt -Wl,-no_weak_imports
-            -ccopt \"-framework Security\"
-            -ccopt \"-framework IOKit\"
-            -ccopt \"-framework CoreFoundation\"
-            )' || echo '()'"))))
-          EOF
+      #       -ccopt -Wl,-search_paths_first
+      #       -ccopt -Wl,-no_compact_unwind
+      #       -ccopt -Wl,-no_weak_imports
+      #       -ccopt \"-framework Security\"
+      #       -ccopt \"-framework IOKit\"
+      #       -ccopt \"-framework CoreFoundation\"
+      #       )' || echo '()'"))))
+      #     EOF
 
-          # patch Makefile to include dal node in layer1 build
-          sed -i.bak '/^OCTEZ_ONLY_LAYER1_EXECUTABLES :=/s/ octez-dal-node//' Makefile
+      #     # patch Makefile to include dal node in layer1 build
+      #     sed -i.bak '/^OCTEZ_ONLY_LAYER1_EXECUTABLES :=/s/ octez-dal-node//' Makefile
 
-          make build-deps
-          export LDFLAGS=""
-          export CFLAGS=""
-          make octez-layer1
-          exit 0
+      #     make build-deps
+      #     export LDFLAGS=""
+      #     export CFLAGS=""
+      #     make octez-layer1
+      #     exit 0
 
-      - name: Set release name to date/time
-        id: set_release_name
-        run: |
-          DATE_STR=$(date '+%Y-%m-%d_%H-%M')
-          echo "RELEASE_NAME=$DATE_STR" >> $GITHUB_ENV
+      # - name: Set release name to date/time
+      #   id: set_release_name
+      #   run: |
+      #     DATE_STR=$(date '+%Y-%m-%d_%H-%M')
+      #     echo "RELEASE_NAME=$DATE_STR" >> $GITHUB_ENV
 
-      - name: Upload files to a GitHub release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ env.TEZOS_VERSION }}-${{ env.RELEASE_NAME }}
-          file: tezos/octez-*
-          file_glob: true
+      # - name: Upload files to a GitHub release
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     tag: ${{ env.TEZOS_VERSION }}-${{ env.RELEASE_NAME }}
+      #     file: tezos/octez-*
+      #     file_glob: true
