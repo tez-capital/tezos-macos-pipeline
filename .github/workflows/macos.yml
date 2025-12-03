@@ -11,7 +11,8 @@ on:
         default: 'octez-v23.2'
 
 env:
-  TEZOS_VERSION: ${{ github.event.inputs.version || 'octez-v23.2' }}
+  TEZOS_VERSION: ${{ github.event.inputs.version || 'octez-v23.3' }}
+  CI_COMMIT_TAG: ${{ github.event.inputs.version || 'octez-v23.3' }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
