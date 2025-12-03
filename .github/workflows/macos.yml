@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Tezos version tag (e.g., octez-v23.2)'
+        description: 'Tezos version tag (e.g., octez-v23.3)'
         required: false
-        default: 'octez-v23.2'
+        default: 'octez-v23.3'
 
 env:
   TEZOS_VERSION: ${{ github.event.inputs.version || 'octez-v23.3' }}
